@@ -11,7 +11,7 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 bat 'docker rm -f webapp-container || exit 0' 
-                bat 'docker run -d -p 8081:8080 --name webapp-container webapp-devops:jenkins'
+                bat 'docker run -d -p 8081:80 --name webapp-container webapp-devops:jenkins'
             }
         }
     }
