@@ -2,28 +2,37 @@ pipeline {
     agent any
 
     stages {
+
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t webapp-devops:jenkins .'
+                bat 'docker build -t srivl/webapp-devops:jenkins .'
             }
         }
-        
-        stage('Run Docker Container') {
+
+        stage('Docker Login') {
             steps {
-                bat 'docker rm -f webapp-container || exit 0' 
-                bat 'docker run -d -p 8081:80 --name webapp-container webapp-devops:jenkins'
-            }
-        }
-        stage('Docker Login & Push') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-creds',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
                     bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-                    bat 'docker push srivl/webapp-devops:jenkins'
                 }
             }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                bat 'docker push srivl/webapp-devops:jenkins'
+            }
+        }
     }
 }
