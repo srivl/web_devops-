@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: srivl/webapp-devops:v2
+        image: srivl/webapp-devops:jenkins
         ports:
         - containerPort: 80

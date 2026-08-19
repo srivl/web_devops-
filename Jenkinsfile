@@ -45,10 +45,16 @@ pipeline {
             }
         }
 
-        stage('Deploy Container') {
+        stage('Deploy to Kubernetes') {
             steps {
-                bat 'docker rm -f webapp-container || exit 0'
-                bat 'docker run -d -p 8081:80 --name webapp-container srivl/webapp-devops:jenkins'
+                bat '''
+                    set KUBECONFIG=C:\\Users\\srikanth\\.kube\\config
+
+                    kubectl apply -f deployment.yaml
+                    kubectl apply -f service.yaml
+
+                    kubectl rollout status deployment/webapp-deployment -n deployment
+                '''
             }
         }
     }
