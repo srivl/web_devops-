@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage('Declarative: Checkout SCM') {
+        stage('Checkout SCM') {
             steps {
                 checkout scm
             }
@@ -11,11 +11,11 @@ pipeline {
 
         stage('Test Kubernetes') {
             steps {
-                bat 'whoami'
-                bat 'echo USERPROFILE=%USERPROFILE%'
-                bat 'echo KUBECONFIG=%KUBECONFIG%'
-                bat 'kubectl config current-context'
-                bat 'kubectl cluster-info'
+                bat '''
+                    set KUBECONFIG=C:\\Users\\srikanth\\.kube\\config
+                    kubectl config current-context
+                    kubectl cluster-info
+                '''
             }
         }
 
